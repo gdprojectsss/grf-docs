@@ -1,0 +1,402 @@
+---
+import '../styles/landing.css';
+
+const repository = 'https://github.com/gdprojectsss/goRustlyFast';
+const install = 'curl -fsSL https://grf.sh | sh';
+
+const features = [
+  {
+    title: 'Scripting',
+    text: 'Pipes, redirections on any file descriptor, loops, functions, arrays and parameter operators, checked against bash 5.3.',
+    chips: ['if', 'while', 'for', 'case', '[[ =~ ]]', '${x#pat}', '${x/a/b}', '${!ref}', '{1..10}', 'declare -A', 'heredocs', 'trap', 'set -euo pipefail', 'printf -v'],
+  },
+  {
+    title: 'Interactive',
+    text: 'Suggestions from history as you type, highlighting, themed prompts and completion that knows the context.',
+    chips: ['autosuggestions', 'highlighting', 'configure-prompt', 'transient prompt', 'git branches', 'ssh hosts', 'did you mean', 'z', 'abbr', 'vi mode'],
+  },
+  {
+    title: 'Jobs and processes',
+    text: 'Each pipeline runs in its own process group, so stopping and resuming jobs works as in bash.',
+    chips: ['cmd &', 'jobs', 'fg', 'bg', 'Ctrl-Z', 'wait', 'kill %1', 'timeout', '2>&1', '&>'],
+  },
+  {
+    title: 'Typed tables',
+    text: 'Sizes compare as sizes and dates as dates. Piped into grep or wc, a table prints as plain text.',
+    chips: ['files', 'procs', 'search', 'git-status', 'ports', 'load', 'where size -gt 10mb', 'sort-by', 'group-by', 'math sum', 'to json|csv|md'],
+  },
+];
+
+const agentFeatures = [
+  { title: 'Agent mode', text: 'Pagers become cat, colors and git prompts are off, and nothing can wait on the terminal for input.', code: 'grfsh --agent -c ...' },
+  { title: 'JSON results', text: 'Status, stdout, stderr, duration, final directory and changed environment in one object.', code: 'grfsh --json -c ...' },
+  { title: 'Output budget', text: 'Long output keeps its first and last lines, and the full text is saved to a file you can search.', code: 'GRFSH_OUTPUT_LINES=400' },
+  { title: 'Persistent sessions', text: 'A shell behind a Unix socket that keeps directory, variables and functions between requests.', code: 'grfsh --serve sock' },
+  { title: 'Look before running', text: 'See every command after expansion, with globs resolved and risky deletes flagged, without running anything.', code: "explain 'rm -rf $dir/*'" },
+  { title: 'Exact edits', text: 'Replace text that must appear once, or pipe search results into replace. Atomic writes on every platform.', code: 'search x | replace x y' },
+];
+
+const guides = [
+  { title: 'Install', text: 'The install script, Homebrew, apt, dnf, the AUR, Nix or cargo.', href: '/docs/installation/' },
+  { title: 'Coming from bash', text: 'What carries over, what changes, and how to check your scripts.', href: '/docs/migrating-from-bash/' },
+  { title: 'Coming from zsh', text: 'Built in replacements for oh-my-zsh, powerlevel10k and the usual plugins.', href: '/docs/migrating-from-zsh/' },
+  { title: 'Prompt themes', text: 'Five presets, a wizard with live previews, and a plain text theme file.', href: '/docs/themes/' },
+  { title: 'Agents and scripts', text: 'Everything a coding agent or CI job needs from a shell.', href: '/docs/agents/' },
+  { title: 'Stability promise', text: 'What 1.x keeps stable, and how features are deprecated.', href: '/docs/stability/' },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>grfsh, a small Unix shell written in Rust</title>
+    <meta name="description" content="Bash style scripting, typed table pipelines, a themed interactive shell and an agent mode, in one small Rust binary." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Martian+Mono:wght@500;700&display=swap" />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="wrap">
+        <a class="brand" href="/" aria-label="grfsh home">
+          <svg viewBox="0 0 80 80" aria-hidden="true"><defs><linearGradient id="gmini" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fb923c"/><stop offset="1" stop-color="#dc2626"/></linearGradient></defs><rect width="80" height="80" rx="18" fill="url(#gmini)"/><text x="40" y="52" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="36" font-weight="700" fill="#ffffff">&gt;_</text></svg>
+          grfsh
+        </a>
+        <nav class="nav-links" aria-label="Sections">
+          <a class="hide-sm" href="#features">Features</a>
+          <a class="hide-sm" href="#agents">Agents</a>
+          <a class="hide-sm" href="#performance">Performance</a>
+          <a href="/docs/">Docs</a>
+          <a class="gh-btn" href={repository} target="_blank" rel="noopener">
+            <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap" id="top">
+      <section class="hero">
+        <span class="status"><i></i>Version 1.0, MIT licensed</span>
+        <svg class="logo" viewBox="0 0 340 110" role="img" aria-label="grfsh">
+          <defs>
+            <linearGradient id="badge" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#fb923c"/>
+              <stop offset="1" stop-color="#dc2626"/>
+            </linearGradient>
+          </defs>
+          <rect x="4" y="15" width="80" height="80" rx="18" fill="url(#badge)"/>
+          <text x="44" y="66" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="36" font-weight="700" fill="#ffffff">&gt;_</text>
+          <text class="word" x="106" y="78" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="66" font-weight="700" letter-spacing="-1">grfsh</text>
+          <rect x="318" y="30" width="8" height="52" rx="2" fill="#f97316">
+            <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.5;1" dur="1.2s" repeatCount="indefinite"/>
+          </rect>
+        </svg>
+        <h1>A small Unix shell written in Rust.</h1>
+        <p class="lede">Bash style scripting, job control, and pipelines that can carry typed tables. Autosuggestions, highlighting and themed prompts work out of the box, and an agent mode makes it a good shell for coding agents too.</p>
+        <div class="install">
+          <div class="cmd">
+            <span class="pr" aria-hidden="true">$</span>
+            <code id="install-cmd">{install}</code>
+            <button class="copy" id="copy-btn" type="button" aria-label="Copy install command">Copy</button>
+          </div>
+        </div>
+        <p class="after">Linux and macOS. Also on Homebrew, apt, dnf, the AUR, Nix and cargo: <a href="/docs/installation/">all install options</a>.</p>
+      </section>
+
+      <section class="demo" aria-label="Terminal demo">
+        <div class="term">
+          <div class="term-bar">
+            <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div class="tabs" role="tablist" aria-label="Demo topics">
+              <button class="tab" role="tab" id="tab-tables" aria-selected="true" aria-controls="screen">tables</button>
+              <button class="tab" role="tab" id="tab-scripting" aria-selected="false" aria-controls="screen">scripting</button>
+              <button class="tab" role="tab" id="tab-agents" aria-selected="false" aria-controls="screen">agents</button>
+              <button class="tab" role="tab" id="tab-interactive" aria-selected="false" aria-controls="screen">interactive</button>
+            </div>
+          </div>
+          <div class="screen" id="screen" role="tabpanel" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="block" id="features">
+        <p class="eyebrow">Features</p>
+        <h2>Familiar syntax, with a few extras built in</h2>
+        <p class="sub">grfsh runs the bash constructs you use every day. The interactive features and table commands ship with the shell, so there is nothing to install or configure.</p>
+        <div class="features">
+          {features.map((feature) => (
+            <div class="feat">
+              <h3><span>&gt;</span>{feature.title}</h3>
+              <p>{feature.text}</p>
+              <div class="chips">{feature.chips.map((chip) => <code>{chip}</code>)}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="block" id="agents">
+        <p class="eyebrow">For agents</p>
+        <h2>A shell that coding agents can drive safely</h2>
+        <p class="sub">Agents and CI jobs need a shell that never stops to ask, keeps output short, and says exactly what happened. grfsh has that built in.</p>
+        <div class="agent-grid">
+          {agentFeatures.map((feature) => (
+            <div class="feat">
+              <h3><span>&gt;</span>{feature.title}</h3>
+              <p>{feature.text}</p>
+              <div class="chips"><code>{feature.code}</code></div>
+            </div>
+          ))}
+        </div>
+        <p class="today"><a href="/docs/agents/">Read the agent guide</a></p>
+      </section>
+
+      <section class="block" id="performance">
+        <div class="bench-head">
+          <div>
+            <p class="eyebrow">Performance</p>
+            <h2>Measured against dash, bash and zsh</h2>
+            <p class="sub" style="margin-bottom:0">Mean wall time from hyperfine. Shorter bars are faster. Each panel has its own scale.</p>
+          </div>
+          <div class="view-toggle" role="group" aria-label="Benchmark view">
+            <button type="button" id="view-chart" aria-pressed="true">Chart</button>
+            <button type="button" id="view-table" aria-pressed="false">Table</button>
+          </div>
+        </div>
+        <div class="panels" id="bench-chart"></div>
+        <div class="tablebox" id="bench-table" hidden>
+          <table>
+            <thead><tr><th>Benchmark</th><th class="num col-me">grfsh</th><th class="num">dash</th><th class="num">bash</th><th class="num">zsh</th></tr></thead>
+            <tbody id="bench-tbody"></tbody>
+          </table>
+        </div>
+        <p class="bench-note">Apple M2, macOS 26.6, system bash 3.2.57, dash, and zsh 5.9. Reproduce with <code>scripts/bench.sh</code>. The bash shipped with macOS is old, and a current bash does better on the string benchmark.</p>
+      </section>
+
+      <section class="block" id="compare">
+        <p class="eyebrow">Why grfsh</p>
+        <h2>How it compares on the features it focuses on</h2>
+        <p class="sub">Default installs with no plugins or extra configuration, as of October 2026.</p>
+        <div class="tablebox">
+          <table class="cmp">
+            <thead><tr><th></th><th class="c col-me">grfsh</th><th class="c">bash</th><th class="c">zsh</th><th class="c">fish</th><th class="c">nushell</th></tr></thead>
+            <tbody id="cmp-tbody"></tbody>
+          </table>
+        </div>
+        <p class="foot-note">Corrections are welcome in an <a href={`${repository}/issues`} target="_blank" rel="noopener">issue</a>. grfsh does not cover all of bash: see <a href="/docs/compatibility/">what is supported</a>.</p>
+      </section>
+
+      <section class="block" id="start">
+        <p class="eyebrow">Get started</p>
+        <h2>Pick up where you are</h2>
+        <p class="sub">Guides for installing, moving over from another shell, and making grfsh your own.</p>
+        <div class="cards">
+          {guides.map((guide) => (
+            <a class="card" href={guide.href}>
+              <h3>{guide.title}</h3>
+              <p>{guide.text}</p>
+              <span class="arrow">Read more</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <span>grfsh is released under the MIT license.</span>
+        <a href="/docs/">Documentation</a>
+        <a href={repository} target="_blank" rel="noopener">github.com/gdprojectsss/goRustlyFast</a>
+      </div>
+    </footer>
+
+    <script is:inline>(function () {
+  var btn = document.getElementById('copy-btn');
+  var codeEl = document.getElementById('install-cmd');
+  btn.addEventListener('click', function () {
+    var text = codeEl.textContent;
+    function done(label) { btn.textContent = label; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); }
+    function fallback() {
+      var r = document.createRange(); r.selectNodeContents(codeEl);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      done('Selected');
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function () { done('Copied'); }, fallback);
+    } catch (e) { fallback(); }
+  });
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function prompt(extra) {
+    return '<span class="p-user">you@laptop</span>:<span class="p-path">~/servers</span> <span class="p-br">(main)</span>' + (extra || '') + ' $ ';
+  }
+  function hl(cmd) {
+    var parts = cmd.split(' | ');
+    return parts.map(function (p) {
+      var m = p.match(/^(\S+)(.*)$/);
+      if (!m) return esc(p);
+      return '<span class="c-cmd">' + esc(m[1]) + '</span>' + esc(m[2]);
+    }).join('<span class="c-pipe"> | </span>');
+  }
+  var scenes = {
+    tables: {
+      steps: [
+        { cmd: 'load servers.csv | where cpu -gt 50 | sort-by cpu -r', out:
+          'host   region  cpu  uptime_days\n<span class="c-dim">-----  ------  ---  -----------</span>\ndb-1   us       91          203\nweb-1  eu       72           41' },
+        { cmd: 'files src | where type == dir | count', out: '7' },
+        { cmd: 'load servers.csv | where region == eu | to json', out:
+          esc('[{"host":"web-1","region":"eu","cpu":72,"uptime_days":41},{"host":"web-2","region":"eu","cpu":18,"uptime_days":41}]') }
+      ],
+      note: 'Table commands pass typed rows to each other. On a terminal you get an aligned table; piped into grep or awk you get plain text.'
+    },
+    scripting: {
+      steps: [
+        { cmd: 'greet() { local who=${1:-world}; echo "hi $who"; }; greet', out: 'hi world', raw: true },
+        { cmd: 'name=grfsh; echo ${name^^} {1..5}', out: 'GRFSH 1 2 3 4 5', raw: true },
+        { cmd: 'sleep 30 &', out: '[1] 16314', raw: true },
+        { cmd: 'jobs', out: '[1]+  Running    sleep 30', ex: ' jobs:1' }
+      ],
+      note: 'Functions, parameter operators, brace expansion and job control use bash syntax. The prompt shows the number of background jobs.'
+    },
+    agents: {
+      steps: [
+        { cmd: "grfsh --json -c 'cd /tmp; export MODE=test; echo built'", raw: true, out:
+          esc('{"status":0,"stdout":"built\\n","stderr":"","duration_ms":0,"cwd":"/tmp","env":{"MODE":"test"},"truncated":false,"stdout_log":null,"stderr_log":null}') },
+        { cmd: "build=; explain 'rm -rf $build/'", raw: true, out:
+          '   1  rm -rf /\n        <span class="c-err">warning: $build is empty or unset here</span>\n        deletes recursively: /\n        <span class="c-err">warning: this deletes /</span>\n        runs /bin/rm' },
+        { cmd: 'search -l old_name src | replace old_name new_name', out: 'src/main.rs: 2 replacements\nsrc/config.rs: 1 replacement' }
+      ],
+      note: 'Agent mode turns off pagers and prompts, trims long output, and reports results as JSON. explain shows what a command would do without running it.'
+    },
+    interactive: {
+      steps: [
+        { cmd: 'gti status', out: '<span class="c-err">grfsh:</span> gti: command not found, did you mean \'git\'?' },
+        { cmd: '', ex: ' <span class="c-st">[127]</span>', partial: 'load serv', ghost: 'ers.csv | where cpu -gt 50 | sort-by cpu -r' }
+      ],
+      note: 'Typos get a suggestion, the prompt shows the last exit status, and grey text completes a line from your history. Press the right arrow to accept it.'
+    }
+  };
+
+  var screen = document.getElementById('screen');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var timer = null;
+
+  function renderCmd(step) {
+    return step.raw ? '<span class="c-cmd">' + esc(step.cmd.split(' ')[0]) + '</span>' + esc(step.cmd.slice(step.cmd.split(' ')[0].length)) : hl(step.cmd);
+  }
+  function lines(scene, upto, typed) {
+    var html = '';
+    var steps = scene.steps;
+    for (var i = 0; i < steps.length; i++) {
+      var s = steps[i];
+      if (i > upto) break;
+      var ex = s.ex || '';
+      if (s.partial !== undefined) {
+        var shown = (i === upto && typed !== null) ? s.partial.slice(0, typed) : s.partial;
+        var ghost = (i === upto && typed !== null && typed < s.partial.length) ? '' : '<span class="ghost">' + esc(s.ghost) + '</span>';
+        html += prompt(ex) + hl(shown) + '<span class="caret"></span>' + ghost + '\n';
+        continue;
+      }
+      if (i === upto && typed !== null) {
+        html += prompt(ex) + esc(s.cmd.slice(0, typed)) + '<span class="caret"></span>\n';
+        break;
+      }
+      html += prompt(ex) + renderCmd(s) + '\n' + s.out + '\n';
+    }
+    var last = steps[steps.length - 1];
+    if (upto >= steps.length - 1 && typed === null && last.partial === undefined) {
+      html += prompt(last.ex || '') + '<span class="caret"></span>\n';
+    }
+    return '<pre>' + html + '</pre><div class="screen-note">' + scene.note + '</div>';
+  }
+
+  function show(name, animate) {
+    clearTimeout(timer);
+    var scene = scenes[name];
+    if (!animate || reduce) { screen.innerHTML = lines(scene, scene.steps.length - 1, null); return; }
+    var i = 0, c = 0;
+    function tick() {
+      var s = scene.steps[i];
+      var full = s.partial !== undefined ? s.partial : s.cmd;
+      if (c <= full.length) {
+        screen.innerHTML = lines(scene, i, c);
+        c++;
+        timer = setTimeout(tick, 28 + Math.random() * 30);
+      } else {
+        i++; c = 0;
+        if (i >= scene.steps.length) { screen.innerHTML = lines(scene, scene.steps.length - 1, null); return; }
+        screen.innerHTML = lines(scene, i - 1, null).replace(/<span class="caret"><\/span>\n<\/pre>/, '</pre>');
+        timer = setTimeout(tick, 420);
+      }
+    }
+    tick();
+  }
+
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      tabs.forEach(function (o) { o.setAttribute('aria-selected', o === t ? 'true' : 'false'); });
+      show(t.id.replace('tab-', ''), true);
+    });
+  });
+  show('tables', false);
+  var shells = ['grfsh', 'dash', 'bash', 'zsh'];
+  var bench = [
+    { name: 'Startup', v: [1.9, 1.2, 1.6, 2.5] },
+    { name: '20,000 iteration while loop', v: [34.5, 36.7, 65.7, 34.7] },
+    { name: 'Building a string 5,000 times', v: [17.3, 49.8, 911.8, 106.2] },
+    { name: 'Five stage pipeline', v: [4.4, 3.7, 4.2, 5.3] },
+    { name: '200 command substitutions', v: [84.5, 73.2, 83.0, 90.5] }
+  ];
+  var chart = document.getElementById('bench-chart');
+  var tbody = document.getElementById('bench-tbody');
+  bench.forEach(function (b) {
+    var max = Math.max.apply(null, b.v);
+    var panel = document.createElement('div');
+    panel.className = 'panel';
+    var rows = b.v.map(function (val, i) {
+      var label = shells[i] + ', ' + b.name + ': ' + val.toFixed(1) + ' ms';
+      return '<div class="bar-row' + (i === 0 ? ' me' : '') + '" tabindex="0" title="' + label + '" aria-label="' + label + '">' +
+        '<span class="name">' + shells[i] + '</span>' +
+        '<span class="track"><span class="fill" style="display:block;width:' + (val / max * 100).toFixed(2) + '%"></span></span>' +
+        '<span class="val">' + val.toFixed(1) + ' ms</span></div>';
+    }).join('');
+    panel.innerHTML = '<h3>' + b.name + '</h3><div class="bars">' + rows + '</div>';
+    chart.appendChild(panel);
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + b.name + '</td>' + b.v.map(function (val, i) {
+      return '<td class="num' + (i === 0 ? ' col-me' : '') + '">' + val.toFixed(1) + ' ms</td>';
+    }).join('');
+    tbody.appendChild(tr);
+  });
+  var vc = document.getElementById('view-chart'), vt = document.getElementById('view-table');
+  function setView(table) {
+    vc.setAttribute('aria-pressed', table ? 'false' : 'true');
+    vt.setAttribute('aria-pressed', table ? 'true' : 'false');
+    chart.hidden = table;
+    document.getElementById('bench-table').hidden = !table;
+  }
+  vc.addEventListener('click', function () { setView(false); });
+  vt.addEventListener('click', function () { setView(true); });
+  var cmp = [
+    ['POSIX style syntax (<code>if</code>, <code>for</code>, <code>$(...)</code>)', 'yes', 'yes', 'yes', 'no', 'no'],
+    ['Plain text pipes work unchanged', 'yes', 'yes', 'yes', 'yes', 'yes'],
+    ['Typed table pipelines', 'yes', 'no', 'no', 'no', 'yes'],
+    ['Autosuggestions out of the box', 'yes', 'no', 'no', 'yes', 'yes'],
+    ['Syntax highlighting out of the box', 'yes', 'no', 'no', 'yes', 'yes'],
+    ['Frecent directory jumping built in', 'yes', 'no', 'no', 'no', 'no'],
+    ['Agent mode with JSON results', 'yes', 'no', 'no', 'no', 'no'],
+    ['Mature and battle tested', 'no', 'yes', 'yes', 'yes', 'partial']
+  ];
+  var ct = document.getElementById('cmp-tbody');
+  cmp.forEach(function (r) {
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + r[0] + '</td>' + r.slice(1).map(function (v, i) {
+      var cls = v === 'yes' ? 'yes' : (v === 'no' ? 'no' : 'part');
+      return '<td class="c' + (i === 0 ? ' col-me' : '') + '"><span class="' + cls + '">' + v + '</span></td>';
+    }).join('');
+    ct.appendChild(tr);
+  });
+})();</script>
+  </body>
+</html>
