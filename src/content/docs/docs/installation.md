@@ -57,11 +57,11 @@ sha256sum --check --ignore-missing SHA256SUMS
 | --- | --- |
 | Debian, Ubuntu | download the `.deb` from a release, then `sudo apt install ./grfsh_*.deb` |
 | Fedora, RHEL, openSUSE | download the `.rpm` from a release, then `sudo dnf install ./grfsh-*.rpm` |
-| Arch Linux | `yay -S grfsh-git`, or build `packaging/aur/PKGBUILD` with `makepkg -si` |
+| Arch Linux | run `makepkg -si` in `packaging/aur/grfsh-bin` for the release binary or `packaging/aur/grfsh-git` to build from source. AUR packages will follow. |
 | Nix | `nix run github:gdprojectsss/goRustlyFast` or `nix profile install github:gdprojectsss/goRustlyFast` |
 | Homebrew | `brew install --HEAD gdprojectsss/tap/grfsh` |
 
-The `.deb`, `.rpm` and AUR packages install the man page, so `man grfsh` works afterwards.
+The `.deb`, `.rpm` and Arch packages install the man page, so `man grfsh` works afterwards.
 
 ## From source
 
