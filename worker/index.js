@@ -18,7 +18,7 @@ function text(body, status = 200, type = 'text/plain; charset=utf-8') {
 }
 
 async function installScript() {
-  const response = await fetch(installer, { cf: { cacheTtl: 300, cacheEverything: true } });
+  const response = await fetch(installer, { cf: { cacheTtlByStatus: { '200-299': 300, '400-599': 0 } } });
   if (!response.ok) {
     return text('echo "grfsh install: the installer is unavailable right now" >&2\nexit 1\n', 502, 'text/x-shellscript; charset=utf-8');
   }
@@ -26,15 +26,14 @@ async function installScript() {
 }
 
 async function latestTag() {
-  const response = await fetch(`https://api.github.com/repos/${repository}/releases/latest`, {
-    headers: { 'user-agent': 'grf.sh', accept: 'application/vnd.github+json' },
-    cf: { cacheTtl: 300, cacheEverything: true },
+  const response = await fetch(`https://github.com/${repository}/releases/latest`, {
+    redirect: 'manual',
+    headers: { 'user-agent': 'grf.sh' },
+    cf: { cacheTtlByStatus: { '300-399': 300, '400-599': 0 } },
   });
-  if (!response.ok) {
-    return null;
-  }
-  const release = await response.json();
-  return release.tag_name ?? null;
+  const location = response.headers.get('location') ?? '';
+  const match = location.match(/\/releases\/tag\/([^/?#]+)$/);
+  return match ? decodeURIComponent(match[1]) : null;
 }
 
 async function download(version, name) {

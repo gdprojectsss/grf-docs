@@ -59,7 +59,7 @@ sha256sum --check --ignore-missing SHA256SUMS
 | Fedora、RHEL、openSUSE | 从发布页面下载 `.rpm`，然后运行 `sudo dnf install ./grfsh-*.rpm` |
 | Arch Linux | 在 `packaging/aur/grfsh-bin` 中运行 `makepkg -si` 安装预编译版本，或在 `packaging/aur/grfsh-git` 中从源码构建。AUR 软件包稍后提供。 |
 | Nix | `nix run github:gdprojectsss/goRustlyFast` 或 `nix profile install github:gdprojectsss/goRustlyFast` |
-| Homebrew | `brew install --HEAD gdprojectsss/tap/grfsh` |
+| Homebrew | `brew install gdprojectsss/tap/grfsh` |
 
 `.deb`、`.rpm` 和 Arch 软件包会一并安装 man 手册页，之后即可使用 `man grfsh`。
 
