@@ -12,7 +12,7 @@ description: "Startup files, plugins, environment variables and the files grfsh 
 | `~/.config/grfsh/plugins/*/init.grfsh` | interactive shells, after the rc file, in name order |
 | `~/.config/grfsh/theme` | the prompt, reread when it changes |
 
-`XDG_CONFIG_HOME` moves `~/.config`. Startup files and plugins are skipped with a warning when they or their directory belong to another user or can be written by group or others. `chmod go-w` fixes the warning.
+On macOS, login shells first add the directories from `/etc/paths` and `/etc/paths.d` to `PATH`, as `path_helper` does for zsh and bash. `XDG_CONFIG_HOME` moves `~/.config`. Startup files and plugins are skipped with a warning when they or their directory belong to another user or can be written by group or others. `chmod go-w` fixes the warning.
 
 ## A starting rc file
 

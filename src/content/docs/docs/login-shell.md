@@ -19,7 +19,7 @@ command -v grfsh | sudo tee -a /etc/shells
 chsh -s "$(command -v grfsh)"
 ```
 
-Log out and back in. New terminals now start grfsh as a login shell, which reads `~/.config/grfsh/profile` or `~/.grfsh_profile` and then your rc file.
+Log out and back in, or quit your terminal app completely and reopen it. Some terminals, Ghostty among them, read the login shell once when they start. New terminals now start grfsh as a login shell, which reads `~/.config/grfsh/profile` or `~/.grfsh_profile` and then your rc file.
 
 ## Terminal apps
 

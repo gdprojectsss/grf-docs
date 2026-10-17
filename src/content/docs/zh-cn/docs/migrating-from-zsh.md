@@ -30,7 +30,17 @@ description: "用 grfsh 的内置功能替代 oh-my-zsh、powerlevel10k 和常�
 | `~/.zsh_history` | `~/.grfsh_history` |
 | `$ZSH_CUSTOM/plugins/name` | `~/.config/grfsh/plugins/name/init.grfsh` |
 
-别名和 export 可以原样复制。对于 oh-my-zsh 的 git 别名，使用缩写更合适，因为历史记录里会保存完整的命令：
+### PATH 和环境变量
+
+grfsh 不会读取 `~/.zshenv` 或 `~/.zprofile`，请把其中的 `export PATH=...` 和其他 export 语句移到 `~/.grfsh_profile`，登录 shell 会读取这个文件。在 macOS 上，登录 shell 会自动加入 `/etc/paths` 和 `/etc/paths.d` 中的目录，也就是 zsh 通过 `path_helper` 得到的那些目录，因此 Homebrew 不需要额外配置。例如：
+
+```sh
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+`brew shellenv` 输出的是 grfsh 无法运行的 zsh 语法，不要在 grfsh 中对它使用 `eval`。
+
+`~/.zshrc` 中的别名和 export 可以原样复制。对于 oh-my-zsh 的 git 别名，使用缩写更合适，因为历史记录里会保存完整的命令：
 
 ```sh
 abbr g git

@@ -30,7 +30,17 @@ Run `configure-prompt` and pick the style closest to your theme. Like p10k, the 
 | `~/.zsh_history` | `~/.grfsh_history` |
 | `$ZSH_CUSTOM/plugins/name` | `~/.config/grfsh/plugins/name/init.grfsh` |
 
-Aliases and exports copy over as they are. For the oh-my-zsh git aliases, abbreviations are nicer since the history keeps the full command:
+### PATH and environment
+
+grfsh does not read `~/.zshenv` or `~/.zprofile`, so move the `export PATH=...` lines and other exports from them into `~/.grfsh_profile`, which login shells read. On macOS, login shells already add `/etc/paths` and `/etc/paths.d`, the same directories zsh gets from `path_helper`, so Homebrew needs no extra line. For example:
+
+```sh
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+`brew shellenv` prints zsh syntax that grfsh cannot run, so do not `eval` it in grfsh.
+
+Aliases and exports from `~/.zshrc` copy over as they are. For the oh-my-zsh git aliases, abbreviations are nicer since the history keeps the full command:
 
 ```sh
 abbr g git
