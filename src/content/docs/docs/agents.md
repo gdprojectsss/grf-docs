@@ -3,6 +3,8 @@ title: "Using grfsh from agents and scripts"
 description: "Agent mode, JSON results, the session server, timeout, explain, replace and search."
 ---
 
+Point an agent at [grf.sh/llms.txt](/llms.txt) for a compact version of this page in the [llms.txt](https://llmstxt.org) format.
+
 Coding agents, CI jobs and editor integrations drive a shell differently from a person at a terminal. Nobody is there to quit a pager or answer a prompt, every line of output costs context, and a command that hangs blocks everything. grfsh has a mode for this.
 
 ## Agent mode

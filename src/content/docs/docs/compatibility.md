@@ -19,7 +19,7 @@ grfsh implements the bash features that real scripts use most. A compatibility s
 - Redirections on any file descriptor, including `2>&1`, `&>`, `>&-` and `exec 3>file`
 - `set -e`, `-u`, `-x`, `-o pipefail`, `trap` for signals, `EXIT` and `ERR`
 - `getopts`, `read` with its common flags, `printf` with `-v`, `mapfile`, `declare` and friends
-- `$PIPESTATUS`, `$LINENO`, `$SECONDS`, `$RANDOM`, `$PPID`, `$BASH_REMATCH`
+- `$PIPESTATUS`, `$LINENO`, `$SECONDS`, `$RANDOM`, `$PPID`, `$BASH_REMATCH`, `$FUNCNAME`, `$BASH_SOURCE`
 - Job control: `&`, `jobs`, `fg`, `bg`, `wait`, `kill %n`, Ctrl-Z
 
 ## Not supported
@@ -35,7 +35,7 @@ grfsh implements the bash features that real scripts use most. A compatibility s
 | `let` | `(( ))` |
 | `trap ... DEBUG` | none |
 | `caller`, `enable`, `hash`, `fc`, `bind`, `compgen`, `suspend`, `disown` | see `grfsh --check` hints |
-| `$BASH_SOURCE`, `$FUNCNAME`, `$BASH_VERSINFO` | none yet |
+| `$BASH_VERSINFO`, `$BASH_LINENO` | none yet |
 
 ## POSIX sh
 

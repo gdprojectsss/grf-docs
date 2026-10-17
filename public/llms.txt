@@ -1,0 +1,101 @@
+# grfsh
+
+> grfsh is a Unix shell written in Rust with bash compatible syntax for common scripts, typed table pipelines, and an agent mode built for coding agents, CI jobs and other programs that drive a shell. This file tells an agent how to use it.
+
+grfsh runs on Linux (x86_64, aarch64) and macOS 13 or newer. Install it with `curl -fsSL https://grf.sh | sh`, which puts the binary in `~/.local/bin/grfsh`. Check it with `grfsh --version`.
+
+## Running commands
+
+- Use `grfsh --agent -c 'COMMANDS'` for every command you run. Agent mode sets `PAGER=cat`, `GIT_PAGER=cat`, `MANPAGER=cat`, `GIT_TERMINAL_PROMPT=0`, `GIT_EDITOR=true`, `DEBIAN_FRONTEND=noninteractive`, `PIP_NO_INPUT=1`, `NO_COLOR=1` and `CLICOLOR=0`. Standard input is `/dev/null` when it would be a terminal. Commands have no controlling terminal, so anything that asks for a password on `/dev/tty` (sudo, ssh) fails at once with an error instead of hanging.
+- Setting `GRFSH_AGENT=1` in the environment has the same effect, and nested grfsh processes inherit it.
+- Use `grfsh --json -c 'COMMANDS'` when you want structured results. It prints exactly one JSON object on standard output:
+  `{"status":0,"stdout":"...","stderr":"...","duration_ms":12,"cwd":"/final/dir","env":{"CHANGED":"value","REMOVED":null},"truncated":false,"stdout_log":null,"stderr_log":null}`
+  The process exit status equals `status`.
+- Syntax is bash: pipelines, `&&`, `||`, `if`, `for`, `while`, `case`, functions, `[[ ]]`, arrays, `${var:-default}`, `$(...)`, `$((...))`, here documents, `set -euo pipefail`. Quote the whole command line in single quotes when passing it to `-c`.
+
+## Output budget
+
+- In agent mode, output longer than `GRFSH_OUTPUT_LINES` lines (default 400) keeps the first and last halves with a line `[grfsh: N lines omitted]` between them, and ends with `[grfsh: full output saved to PATH]`. Read PATH with `search`, `tail` or `sed -n` if you need the middle.
+- Lines longer than 2000 characters are shortened with `[N more characters]`.
+- With `--json`, the same trimming applies to `stdout` and `stderr`, `truncated` is true, and `stdout_log` and `stderr_log` hold the paths of the full text.
+- Set `GRFSH_OUTPUT_LINES=0` to turn the limit off.
+- Without `--json`, standard error is merged into standard output in order.
+
+## Background jobs
+
+- In agent mode, `cmd &` writes the job's output to a private log file and prints `grfsh: background job PID writes its output to PATH`. The job never holds your output pipe open. Read the log later, and stop the job with `kill PID`.
+
+## Time limits
+
+- `timeout DURATION COMMAND [ARGS]` runs a command, function or builtin in its own process group and signals the whole group when the time runs out. Durations take `s`, `m`, `h` or `d` suffixes and decimals, for example `timeout 90 npm test` or `timeout 2m make`.
+- Options: `-s SIGNAL` (default TERM), `-k DURATION` to send KILL after that much more time, `--preserve-status`.
+- Exit status 124 means the time ran out, 137 means it was killed after `-k`, 125 means timeout itself failed.
+
+## Persistent sessions
+
+- `grfsh --serve SOCKET &` starts a shell behind a Unix socket with mode 0600. Directory, variables, functions and aliases persist between requests.
+- `grfsh --client SOCKET [-t SECONDS] 'COMMANDS'` sends one request, prints its stdout and stderr, and exits with its status. Add `--json` before `--client` to get the raw JSON reply. Status 2 means the client could not reach the server.
+- Protocol: write one request per line, either a plain command or `{"command":"...","timeout":SECONDS,"id":ANY}`. Each reply is one JSON line with the fields of `--json` plus `id`, `timed_out` and `exited`.
+- A request past its timeout has its running commands stopped (TERM, then KILL two seconds later) and builtin loops interrupted, and reports status 124.
+- `exit` stops the server and removes the socket. Requests are recorded in `~/.local/share/grfsh/commands.tsv`.
+- Unix socket paths must be shorter than about 100 characters.
+
+## Checking before running
+
+- `grfsh --explain 'COMMANDS'` or `explain 'COMMANDS'` inside a session prints each command after expansion, with globs resolved, without running anything. Command substitutions stay unexpanded. Assignments and `cd` are applied so later lines expand correctly.
+- Notes flag deletions (`rm`, `find -delete`), recursive `chmod` and `chown`, `git reset --hard`, `git clean -f`, force pushes, branch deletion, overwritten files, disk formatting, and variables that expand to nothing inside a path. A line containing `warning:` deserves attention before you run the command.
+- Pass the command in single quotes so variables are expanded by explain, not before it.
+- `grfsh --check SCRIPT` parses a script and lists syntax errors, unsupported bash features and unknown commands with line numbers. It exits 1 when there are errors.
+
+## Editing files
+
+- `replace FILE OLD NEW` replaces OLD with NEW. It fails with exit status 1 unless OLD appears exactly once. The error names the lines where OLD appears, or the line where its first line appears when the rest differs. Use `--all` to replace every occurrence.
+- For multi-line edits, pass only the file and send one or more blocks on standard input. All blocks apply or none do:
+
+  ```
+  replace src/app.py <<'EOF'
+  <<<<<<< old
+  def timeout():
+      return 30
+  =======
+  def timeout():
+      return int(os.environ.get("TIMEOUT", "30"))
+  >>>>>>> new
+  EOF
+  ```
+
+- `-n` prints the change as `FILE:LINE` followed by `- old` and `+ new` lines without writing. `-v` reports the number of replacements.
+- `printf '%s\n' 'text' | write-file [-p] FILE` writes standard input to FILE. `-p` creates parent directories, `-a` appends.
+- Both write to a temporary file in the same directory and rename it into place, keeping the file mode and following symlinks. They behave the same on Linux and macOS.
+
+## Searching and project state
+
+- `search [-i] [-F] [-l] [-H] [-g GLOB] PATTERN [PATH...]` searches file contents with an extended regular expression (`-F` for a fixed string). It skips `.git`, hidden files (`-H` includes them), binary files, files over 20 MB and everything matched by `.gitignore` files, including those in parent directories. `-g '*.rs'` limits file names, `-g '!*.min.js'` excludes them.
+- Output to a pipe or file is `path:line:text`, one match per line. `-l` prints matching file names only.
+- `search PATTERN | replace OLD NEW` replaces only on the matched lines. `search -l PATTERN | replace OLD NEW` replaces in every listed file. Add `-n` to `replace` to preview. Each written file is reported as `PATH: N replacements`.
+- `git-status` lists changed files with `path`, `state` (modified, added, deleted, renamed, copied, untracked, conflict, typechange), `staged`, `unstaged` and `from` columns.
+- `ports` lists listening TCP sockets with `protocol`, `address`, `port`, `pid` and `process`.
+- Tables combine with `where`, `select`, `sort-by`, `first`, `count`, `get COLUMN` and `to json`, for example `git-status | where state == untracked | get path` or `ports | where port == 3000 | to json`.
+
+## Exit statuses
+
+0 success, 1 general failure, 2 usage or syntax error, 124 timeout, 125 timeout failed, 126 not executable, 127 command not found, 128 plus N killed by signal N.
+
+## Limits
+
+- Not supported: extended globs (`shopt -s extglob`), `declare -n` name references, `coproc`, `select`, `let` (use `(( ))`), DEBUG traps. `grfsh --check` reports each.
+- `grfsh` is not a POSIX `sh` replacement. Scripts with a `#!/bin/bash` shebang keep running under bash.
+
+## Docs
+
+- [Agents and scripts](https://grf.sh/docs/agents/): the full guide to agent mode, sessions, timeout, explain, replace and search
+- [Table pipelines](https://grf.sh/docs/tables/): every table command and operator
+- [Scripting](https://grf.sh/docs/scripting/): supported bash syntax with examples
+- [Compatibility with bash](https://grf.sh/docs/compatibility/): supported and missing features
+
+## Optional
+
+- [Full documentation as one text file](https://grf.sh/llms-full.txt)
+- [Installation](https://grf.sh/docs/installation/)
+- [Stability promise](https://grf.sh/docs/stability/): which interfaces, including the JSON fields, stay stable in 1.x
+- [Source code](https://github.com/gdprojectsss/goRustlyFast)

@@ -27,6 +27,8 @@ Corrections to the docs are welcome. Each page has an "Edit page" link at the bo
 | `/download/latest/TARGET` | the newest tarball for a target such as `aarch64-apple-darwin` |
 | `/download/vX.Y.Z/FILE` | any file attached to that release, such as `SHA256SUMS` |
 | `/docs/` | the documentation |
+| `/llms.txt` | instructions for coding agents, in the [llms.txt](https://llmstxt.org) format |
+| `/llms-full.txt` | the whole documentation as one text file, generated at build time |
 
 ## Deploying
 
