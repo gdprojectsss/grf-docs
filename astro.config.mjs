@@ -11,6 +11,12 @@ export default defineConfig({
       logo: { src: './src/assets/mark.svg', alt: 'grfsh' },
       favicon: '/favicon.svg',
       customCss: ['./src/styles/docs.css'],
+      head: [
+        { tag: 'meta', attrs: { property: 'og:image', content: 'https://grf.sh/og.png' } },
+        { tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
+        { tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
+        { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://grf.sh/og.png' } },
+      ],
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/gdprojectsss/goRustlyFast' },
       ],
