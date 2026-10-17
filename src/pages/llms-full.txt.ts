@@ -7,7 +7,7 @@ const order = config.sidebar.flatMap((group) =>
 );
 
 export const GET: APIRoute = async () => {
-  const pages = await getCollection('docs');
+  const pages = (await getCollection('docs')).filter((page) => !page.id.startsWith('zh-cn/'));
   pages.sort((left, right) => order.indexOf(left.id) - order.indexOf(right.id));
   const sections = pages.map(
     (page) => `# ${page.data.title}\n\nSource: https://grf.sh/${page.id}/\n\n${page.body?.trim() ?? ''}\n`,

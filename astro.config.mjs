@@ -7,6 +7,11 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'grfsh',
+      defaultLocale: 'root',
+      locales: {
+        root: { label: 'English', lang: 'en' },
+        'zh-cn': { label: '简体中文', lang: 'zh-CN' },
+      },
       description: 'A small Unix shell written in Rust, with bash style scripting, typed table pipelines and an agent mode.',
       logo: { src: './src/assets/mark.svg', alt: 'grfsh' },
       favicon: '/favicon.svg',
@@ -24,38 +29,38 @@ export default defineConfig({
       lastUpdated: true,
       sidebar: [
         {
-          label: 'Getting started',
+          label: 'Getting started', translations: { 'zh-CN': '入门' },
           items: [
-            { label: 'Introduction', slug: 'docs' },
-            { label: 'Installation', slug: 'docs/installation' },
-            { label: 'Making grfsh your shell', slug: 'docs/login-shell' },
+            { label: 'Introduction', translations: { 'zh-CN': '简介' }, slug: 'docs' },
+            { label: 'Installation', translations: { 'zh-CN': '安装' }, slug: 'docs/installation' },
+            { label: 'Making grfsh your shell', translations: { 'zh-CN': '将 grfsh 设为你的 shell' }, slug: 'docs/login-shell' },
           ],
         },
         {
-          label: 'Using grfsh',
+          label: 'Using grfsh', translations: { 'zh-CN': '使用 grfsh' },
           items: [
-            { label: 'Scripting', slug: 'docs/scripting' },
-            { label: 'Table pipelines', slug: 'docs/tables' },
-            { label: 'Interactive features', slug: 'docs/interactive' },
-            { label: 'Configuration', slug: 'docs/configuration' },
-            { label: 'Prompt themes', slug: 'docs/themes' },
-            { label: 'Theme gallery', slug: 'docs/theme-gallery' },
-            { label: 'Agents and scripts', slug: 'docs/agents' },
+            { label: 'Scripting', translations: { 'zh-CN': '脚本' }, slug: 'docs/scripting' },
+            { label: 'Table pipelines', translations: { 'zh-CN': '表格管道' }, slug: 'docs/tables' },
+            { label: 'Interactive features', translations: { 'zh-CN': '交互功能' }, slug: 'docs/interactive' },
+            { label: 'Configuration', translations: { 'zh-CN': '配置' }, slug: 'docs/configuration' },
+            { label: 'Prompt themes', translations: { 'zh-CN': '提示符主题' }, slug: 'docs/themes' },
+            { label: 'Theme gallery', translations: { 'zh-CN': '主题一览' }, slug: 'docs/theme-gallery' },
+            { label: 'Agents and scripts', translations: { 'zh-CN': '代理和脚本' }, slug: 'docs/agents' },
           ],
         },
         {
-          label: 'Coming from another shell',
+          label: 'Coming from another shell', translations: { 'zh-CN': '从其他 shell 迁移' },
           items: [
-            { label: 'Migrating from bash', slug: 'docs/migrating-from-bash' },
-            { label: 'Migrating from zsh', slug: 'docs/migrating-from-zsh' },
+            { label: 'Migrating from bash', translations: { 'zh-CN': '从 bash 迁移' }, slug: 'docs/migrating-from-bash' },
+            { label: 'Migrating from zsh', translations: { 'zh-CN': '从 zsh 迁移' }, slug: 'docs/migrating-from-zsh' },
           ],
         },
         {
-          label: 'Reference',
+          label: 'Reference', translations: { 'zh-CN': '参考' },
           items: [
-            { label: 'Compatibility with bash', slug: 'docs/compatibility' },
-            { label: 'Stability promise', slug: 'docs/stability' },
-            { label: 'FAQ', slug: 'docs/faq' },
+            { label: 'Compatibility with bash', translations: { 'zh-CN': '与 bash 的兼容性' }, slug: 'docs/compatibility' },
+            { label: 'Stability promise', translations: { 'zh-CN': '稳定性承诺' }, slug: 'docs/stability' },
+            { label: 'FAQ', translations: { 'zh-CN': '常见问题' }, slug: 'docs/faq' },
           ],
         },
       ],
